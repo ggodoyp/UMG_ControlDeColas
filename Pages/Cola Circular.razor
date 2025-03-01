@@ -1,0 +1,71 @@
+﻿
+
+@page "/ColaCircular"
+
+<PageTitle>Cola Circular</PageTitle>
+
+@using ColaBlazor.Services
+
+<h1>Cola Circular</h1>
+
+<div class="row">
+    <div class="col-6">
+        <input type="number" class="form-control" @bind="valor" />
+    </div>
+    <div class="col-3 form-group">
+        <button class="btn btn-primary" @onclick="Encolar">Encolar</button>
+        <button class="btn btn-danger" @onclick="Desencolar">Desencolar</button>
+    </div>
+    <div class="col">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>COLA</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!MyQueue.Vacia())
+                {
+                    int i = MyQueue.Frente;
+                    do
+                    {
+                        <tr>
+                            <td>@MyQueue.Elementos[i]</td>
+                        </tr>
+                        i = (i + 1) % MyQueue.MAX;
+                    } while (i != (MyQueue.Final + 1) % MyQueue.MAX);
+                }
+                else
+                {
+                    <tr>
+                        <td class="text-center text-muted">Cola vacía</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    public ColaCircular MyQueue { get; set; }
+    int valor;
+
+    protected override void OnInitialized()
+    {
+        MyQueue = new ColaCircular(5);
+        valor = 0;
+    }
+
+    private void Encolar()
+    {
+        if (valor == 0) return;
+
+        MyQueue.Encolar(valor);
+        valor = 0;
+    }
+
+    private void Desencolar()
+    {
+        MyQueue.Desencolar();
+    }
+}

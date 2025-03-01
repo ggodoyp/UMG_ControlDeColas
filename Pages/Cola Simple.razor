@@ -1,0 +1,67 @@
+﻿@page "/"
+
+<PageTitle>Cola Simple</PageTitle>
+
+@using ColasBlazor.Services
+
+<h1>Cola Simple</h1>
+
+<div class="row">
+    <div class="col-6">
+        <input type="number" class="form-control" @bind="valor" />
+    </div>
+    <div class="col-3 form-group">
+        <button class="btn btn-primary" @onclick="Encolar">Encolar</button>
+        <button class="btn btn-danger" @onclick="Desencolar">Desencolar</button>
+    </div>
+    <div class="col">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>COLA</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!MyQueue.Vacia())
+                {
+                    @for (int i = MyQueue.Frente; i <= MyQueue.Final; i++)
+                    {
+                        <tr>
+                            <td>@MyQueue.Elementos[i]</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td class="text-center text-muted">Cola vacía</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    public ColaSimple MyQueue { get; set; }
+    int valor;
+
+    protected override void OnInitialized()
+    {
+        MyQueue = new ColaSimple();
+        valor = 0;
+    }
+
+    private void Encolar()
+    {
+        if (valor == 0) return;
+
+        MyQueue.Encolar(valor);
+        valor = 0;
+    }
+
+    private void Desencolar()
+    {
+        MyQueue.Desencolar();
+    }
+}
